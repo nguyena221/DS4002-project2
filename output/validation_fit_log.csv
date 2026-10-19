@@ -1,0 +1,39 @@
+model,order,seasonal_order,trend,status,validation_mae,warnings,elapsed_seconds
+"ARIMA(0, 0, 0)","(0, 0, 0)","(0, 0, 0, 0)",c,ok,2.6901373995844726,,0.12
+"ARIMA(0, 0, 1)","(0, 0, 1)","(0, 0, 0, 0)",c,ok,2.1724628098123726,,0.21
+"ARIMA(0, 0, 2)","(0, 0, 2)","(0, 0, 0, 0)",c,ok,2.1035245116326946,,0.28
+"ARIMA(0, 0, 3)","(0, 0, 3)","(0, 0, 0, 0)",c,ok,2.0782845370924674,,0.35
+"ARIMA(0, 1, 0)","(0, 1, 0)","(0, 0, 0, 0)",n,ok,2.2743754412607453,,0.07
+"ARIMA(0, 1, 1)","(0, 1, 1)","(0, 0, 0, 0)",n,ok,2.2630005580529886,,0.1
+"ARIMA(0, 1, 2)","(0, 1, 2)","(0, 0, 0, 0)",n,ok,2.1122218105282076,,0.19
+"ARIMA(0, 1, 3)","(0, 1, 3)","(0, 0, 0, 0)",n,ok,2.083969261242303,,0.26
+"ARIMA(1, 0, 0)","(1, 0, 0)","(0, 0, 0, 0)",c,ok,2.083133566611168,,0.12
+"ARIMA(1, 0, 1)","(1, 0, 1)","(0, 0, 0, 0)",c,ok,2.061669103869237,,0.23
+"ARIMA(1, 0, 2)","(1, 0, 2)","(0, 0, 0, 0)",c,ok,2.0615568355445566,,0.35
+"ARIMA(1, 0, 3)","(1, 0, 3)","(0, 0, 0, 0)",c,ok,2.062635105990005,,0.6
+"ARIMA(1, 1, 0)","(1, 1, 0)","(0, 0, 0, 0)",n,ok,2.26945834050509,,0.07
+"ARIMA(1, 1, 1)","(1, 1, 1)","(0, 0, 0, 0)",n,ok,2.074349605769008,,0.23
+"ARIMA(1, 1, 2)","(1, 1, 2)","(0, 0, 0, 0)",n,ok,2.0551613066040515,,0.28
+"ARIMA(1, 1, 3)","(1, 1, 3)","(0, 0, 0, 0)",n,ok,2.059931845158608,,0.42
+"ARIMA(2, 0, 0)","(2, 0, 0)","(0, 0, 0, 0)",c,ok,2.064560543913342,,0.24
+"ARIMA(2, 0, 1)","(2, 0, 1)","(0, 0, 0, 0)",c,ok,2.061555698455108,Non-stationary starting autoregressive parameters found. Using zeros as starting parameters. | Non-invertible starting MA parameters found. Using zeros as starting parameters.,0.48
+"ARIMA(2, 0, 2)","(2, 0, 2)","(0, 0, 0, 0)",c,ok,2.061433830926596,,0.3
+"ARIMA(2, 0, 3)","(2, 0, 3)","(0, 0, 0, 0)",c,ok,2.0572559103397308,,1.9
+"ARIMA(2, 1, 0)","(2, 1, 0)","(0, 0, 0, 0)",n,ok,2.192703897812191,,0.12
+"ARIMA(2, 1, 1)","(2, 1, 1)","(0, 0, 0, 0)",n,ok,2.0647756344104424,,0.27
+"ARIMA(2, 1, 2)","(2, 1, 2)","(0, 0, 0, 0)",n,ok,2.0820427046622023,Non-invertible starting MA parameters found. Using zeros as starting parameters.,0.52
+"ARIMA(2, 1, 3)","(2, 1, 3)","(0, 0, 0, 0)",n,ok,2.0545148122046104,Non-invertible starting MA parameters found. Using zeros as starting parameters.,0.84
+"ARIMA(3, 0, 0)","(3, 0, 0)","(0, 0, 0, 0)",c,ok,2.061109308297505,,0.31
+"ARIMA(3, 0, 1)","(3, 0, 1)","(0, 0, 0, 0)",c,ok,2.0613776219039393,,0.32
+"ARIMA(3, 0, 2)","(3, 0, 2)","(0, 0, 0, 0)",c,ok,2.061153269706575,,0.55
+"ARIMA(3, 0, 3)","(3, 0, 3)","(0, 0, 0, 0)",c,ok,2.0565841398267013,Non-stationary starting autoregressive parameters found. Using zeros as starting parameters. | Non-invertible starting MA parameters found. Using zeros as starting parameters.,2.37
+"ARIMA(3, 1, 0)","(3, 1, 0)","(0, 0, 0, 0)",n,ok,2.1674348416794036,,0.15
+"ARIMA(3, 1, 1)","(3, 1, 1)","(0, 0, 0, 0)",n,ok,2.0715892053271396,,0.48
+"ARIMA(3, 1, 2)","(3, 1, 2)","(0, 0, 0, 0)",n,ok,2.062504023275153,Non-stationary starting autoregressive parameters found. Using zeros as starting parameters. | Non-invertible starting MA parameters found. Using zeros as starting parameters.,0.63
+"ARIMA(3, 1, 3)","(3, 1, 3)","(0, 0, 0, 0)",n,ok,2.081141435581126,Non-invertible starting MA parameters found. Using zeros as starting parameters.,1.31
+"SARIMA(1, 0, 0)x(1, 0, 0, 7)","(1, 0, 0)","(1, 0, 0, 7)",c,ok,2.084973089249968,,0.41
+"SARIMA(1, 0, 0)x(0, 0, 1, 7)","(1, 0, 0)","(0, 0, 1, 7)",c,ok,2.0848951680991687,,0.28
+"SARIMA(1, 0, 0)x(1, 0, 1, 7)","(1, 0, 0)","(1, 0, 1, 7)",c,ok,2.116471562655666,,2.47
+"SARIMA(1, 0, 1)x(1, 0, 0, 7)","(1, 0, 1)","(1, 0, 0, 7)",c,ok,2.0678270238745253,,0.53
+"SARIMA(1, 0, 1)x(0, 0, 1, 7)","(1, 0, 1)","(0, 0, 1, 7)",c,ok,2.0673893553549614,,0.52
+"SARIMA(1, 0, 1)x(1, 0, 1, 7)","(1, 0, 1)","(1, 0, 1, 7)",c,ok,2.077447255395433,,1.56

@@ -1,0 +1,12 @@
+.uv-cache/
+.uv-python/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store
+data/raw/*
+!data/raw/README.md
+!data/raw/daily_88101_*.zip
+
+
+

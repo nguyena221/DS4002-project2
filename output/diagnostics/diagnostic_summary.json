@@ -1,0 +1,24 @@
+{
+  "model": "ARIMA(2, 1, 3)",
+  "dataset": "corrected, no interpolation",
+  "converged": true,
+  "warnings": [
+    "Non-invertible starting MA parameters found. Using zeros as starting parameters."
+  ],
+  "minimum_ar_root_magnitude": 1.2243412482848537,
+  "minimum_ma_root_magnitude": 1.037018971414131,
+  "validation_scored_days": 349,
+  "validation_mae": 2.0545148122046104,
+  "validation_mean_error": 0.001991349786751523,
+  "validation_rmse": 2.9801551001605504,
+  "negative_validation_forecasts": 0,
+  "training_innovations_used": 1044,
+  "test_evaluated": false,
+  "notes": [
+    "Starting-parameter warnings concern initialization; convergence is checked separately.",
+    "AR/MA root magnitudes near one can indicate sensitivity; differencing is separate.",
+    "Error-lag correlations are exploratory, not formal significance tests.",
+    "QQ departures flag non-normal errors; they do not alone invalidate point forecasts.",
+    "No automatic pass/fail decision or new tuning is based on these diagnostics."
+  ]
+}
