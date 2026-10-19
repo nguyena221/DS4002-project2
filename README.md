@@ -1,17 +1,23 @@
-# Predicting Next-Day PM2.5 at the Albemarle Monitoring Site
+﻿# Predicting Next-Day PM2.5 at the Albemarle Monitoring Site
 
-DS 4002 Project 2 asks whether past daily PM2.5 measurements at EPA AQS site 51-003-0001 can predict the next day's average concentration. Our target is a 2025 test mean absolute error (MAE) at least 10% below the persistence baseline: tomorrow equals today. Results have not yet been established.
+DS 4002 Project 2 | EAZ Inc. | Annie Nguyen, Zilan Saadi, and Eli Boyden
+
+This project forecasts the next day's average PM2.5 concentration at EPA AQS site **51-003-0001** in Albemarle County, Virginia. The goal is a **2025 test mean absolute error (MAE) at least 10% lower** than a persistence baseline that predicts tomorrow's pollution will equal today's.
+
+**Current status:** preprocessing, four-way model comparison, selected-model diagnostics, and final model refitting are complete. The selected approach is **Corrected POC - ARIMA(2,1,3), without interpolation**. The final model was fitted on 2021-2024. **2025 has not been forecast or evaluated; the final 10% goal is not yet established.**
 
 ## Repository contents
 
-This repository is being prepared for MI3. We are starting with preprocessing without interpolation: missing measurements will remain blank. The supplied non-interpolated notebook and five raw EPA ZIP files have been added. The notebook still needs a clean verification run before its CSV is accepted. No models have been trained here yet.
+The repository contains raw EPA data, four processed datasets, preprocessing notebooks, Python modeling scripts, validation results, figures, diagnostics, and a saved model for final evaluation. [Data metadata](data/README.md) explains the measurements and [model selection and handoff](output/model_selection.md) documents the selected approach and Eli's next steps.
 
 ## 1. Software and platform
 
-- Preprocessing: Python in VS Code/Jupyter on Windows, using pandas and NumPy, plus built-in zipfile and os modules.
-- Repository setup: Windows, PowerShell, and Git.
-- Planned modeling: statsmodels; plotting: matplotlib.
-- Exact Python and package versions will be recorded after the workflow is run and verified.
+- Platform: Windows, VS Code, PowerShell, and Git.
+- Preprocessing: Jupyter notebooks using Python, pandas, NumPy, and Python's built-in pathlib and zipfile modules.
+- Modeling: statsmodels SARIMAX implementation for ARIMA and seasonal ARIMA, with pandas, NumPy, and SciPy.
+- Figures: matplotlib.
+- Recorded refit environment: Python **3.14.7**, NumPy **2.5.3**, pandas **3.0.5**, SciPy **1.18.1**, and statsmodels **0.15.0**.
+- Exact refit package pins are in [requirements.txt](output/final_model/requirements.txt). These pins cover refitting/loading the saved model; matplotlib and ipykernel are also needed for plots and notebook execution.
 
 ## 2. Documentation map
 
@@ -21,81 +27,133 @@ DS4002-project2/
 |-- LICENSE.md
 |-- .gitignore
 |-- scripts/
-|   `-- preprocessing_without_interpolation.ipynb
+|   |-- preprocessing_without_interpolation.ipynb
+|   |-- preprocessing_with_interpolation.ipynb
+|   |-- model_training.py
+|   |-- validation_models.py
+|   |-- model_diagnostics.py
+|   `-- refit_selected_model.py
 |-- data/
 |   |-- README.md
 |   |-- raw/
-|   |   `-- README.md
+|   |   |-- README.md
+|   |   `-- daily_88101_2021.zip ... daily_88101_2025.zip
 |   `-- processed/
-|       `-- .gitkeep
+|       |-- albemarle_pm25_poc3_without_interpolation.csv
+|       |-- albemarle_pm25_corrected_poc_without_interpolation.csv
+|       |-- albemarle_pm25_poc3_forward_filled.csv
+|       `-- albemarle_pm25_corrected_poc_forward_filled.csv
 `-- output/
-    `-- figures/
-        `-- .gitkeep
+    |-- split_summary.csv
+    |-- training_lag_correlations.csv
+    |-- validation_*.csv / validation_selection.json
+    |-- poc_comparison_*.csv
+    |-- gap_filling_comparison_*.csv
+    |-- model_selection.md
+    |-- original_poc3/                 # Original history, no filling
+    |-- original_poc3_forward_filled/  # Original history, forward filled
+    |-- corrected_forward_filled/     # Corrected history, forward filled
+    |-- figures/                      # Training and validation plots
+    |-- diagnostics/                  # Selected-model checks
+    `-- final_model/
+        |-- corrected_poc_arima_2_1_3_without_interpolation.pkl
+        |-- fitted_parameters.csv
+        |-- refit_history_2021_2024.csv
+        |-- refit_metadata.json
+        |-- refit_summary.txt
+        `-- requirements.txt
 ```
 
-The .gitkeep files preserve empty folders in Git and will be unnecessary once project files are added.
+The corrected/no-fill validation experiment saves its results directly under `output/`; the other three experiments use the named subfolders. `validation_models.py` is a helper imported by `model_training.py`, not a separate execution step.
 
 ## 3. Instructions for reproducing results
 
-The workflow is pending verification; there are no completed model results to reproduce yet.
+Run terminal commands below from the **repository root**. Use the same Python environment for VS Code notebooks and terminal scripts. If your Python command is `python` rather than `python3`, substitute it consistently.
 
-1. Use the five annual EPA ZIP files included in `data/raw/`.
-2. Open `scripts/preprocessing_without_interpolation.ipynb` in VS Code. Select a Python kernel with pandas, NumPy, and ipykernel installed. Restart the kernel and run every cell from top to bottom. The notebook finds ZIP files in `data/raw/` automatically.
-3. Confirm site 51-003-0001, parameter 88101, POC 23/method 736 before August 1, 2023 and POC 3/method 636 afterward, Sample Duration `1 HOUR`, at least 18 hourly observations, and the rule used to resolve repeated dates. Inspect any conflicting records before accepting the daily series.
-4. Keep one row for every calendar date and leave missing pollution measurements blank. Verify output counts and review the documented measurement-selection revision in `data/README.md`.
-5. The notebook saves `data/processed/albemarle_pm25_corrected_poc_without_interpolation.csv` directly. Verify that export and record tested software versions here.
-6. Implement ARIMA and suitable SARIMA candidates using 2021-2023 for training and rolling one-day-ahead predictions during 2024 for selection. Use only information available before each forecast and an implementation that supports missing observations.
-7. Refit the selected configuration on 2021-2024 and evaluate on 2025 without further tuning. Compare the model and baseline on identical dates with actual measurements for both today and tomorrow.
-8. Save predictions, error summaries, and plots under `output/`. Include at least two explanatory data plots in `data/README.md`. Replace these provisional instructions with exact execution steps once implementation is complete.
-
-## References
-
-The project proposal (MI1), analysis plan (MI2), and instructor's MI3 rubric guide this work. Complete IEEE-style references will be added as source and analysis documentation is verified.
-
-
-
-
-
-
-## Running model selection
-
-From the repository root, run:
+### Install dependencies
 
 ```powershell
-python3 -m pip install numpy pandas matplotlib statsmodels
+python3 -m pip install -r output/final_model/requirements.txt
+python3 -m pip install matplotlib ipykernel
+```
+
+The saved metadata records the environment used for the completed refit. Another Python/platform combination may require compatible package versions and may produce small numerical differences.
+
+### Prepare and verify the datasets
+
+All five raw ZIPs and four processed CSVs are included. To reproduce model results from those included CSVs, proceed to model comparison below. To rerun preprocessing:
+
+1. Open `scripts/preprocessing_without_interpolation.ipynb`, select the Python kernel, restart it, and run all cells. It reads ZIPs from `data/raw/` and regenerates **the corrected no-fill CSV**. It uses the included original POC-3 no-fill CSV as a comparison reference.
+2. The original POC-3 no-fill export was independently reconstructed from the raw files using the original selection rules. The current no-fill notebook regenerates only the corrected version. To recreate the original using a temporary copy of that notebook, replace `data = site_data.loc[older_corrected | newer_aligned].copy()` with `data = site_data.loc[site_data["POC"] == 3].copy()` and change only `output_filename` to `albemarle_pm25_poc3_without_interpolation.csv`. Retain the site, hourly-summary, coverage, event-priority, duplicate, and complete-calendar processing. Do not overwrite the corrected export with this temporary run.
+3. Open `scripts/preprocessing_with_interpolation.ipynb`, restart its kernel, and run all cells. Despite its filename, it uses **forward filling**, not linear interpolation. It reconstructs both observed histories, verifies them against the no-fill references, and writes the two forward-filled CSVs.
+4. Each no-fill CSV has **1,826 calendar dates, 1,759 measured days, and 67 missing values**. Each forward-filled CSV has **61 filled values and six leading blanks**. Original observations and fill indicators are retained in the filled exports. Existing no-fill CSVs are not overwritten by the forward-fill notebook.
+
+### Run training and validation comparisons
+
+```powershell
 python3 scripts/model_training.py
 ```
 
-Use the same interpreter that successfully loaded the data. Dependency versions are recorded in `output/validation_selection.json` after model comparison; a pinned environment is still pending a verified run.
+This script:
 
-The script searches 32 ARIMA configurations (p/q 0-3, d 0-1) and six exploratory weekly SARIMA configurations. For d=0 it uses a constant; for d=1 it uses no drift. Weekly candidates use nonseasonal orders (1,0,0) or (1,0,1) and seasonal orders (1,0,0,7), (0,0,1,7), or (1,0,1,7). These are fixed in advance, not evidence of an established weekly cycle.
+1. Separates **2021-2023 training**, **2024 validation**, and **2025 test** periods. Only availability counts are reported for the test period.
+2. Saves training-only exploratory plots and calendar-preserving lag correlations.
+3. Tests **32 ARIMA candidates** with p/q from 0 to 3 and d from 0 to 1, plus **six exploratory weekly SARIMA candidates**, for each of the four datasets: **152 candidate fits total**.
+4. Uses a constant for nonseasonal d=0 and no drift for d=1. Weekly candidates combine nonseasonal orders (1,0,0) or (1,0,1) with seasonal orders (1,0,0,7), (0,0,1,7), or (1,0,1,7).
+5. Fits parameters on 2021-2023 and keeps them fixed while generating one-day-ahead 2024 predictions. Previous validation observations update the model state; the current/future target is not used for its own prediction.
+6. Scores every approach on the **same 349 dates** with real target and previous-day measurements. Filled values are model inputs only, never scoring targets or baseline answers. Failed/nonconverged fits are logged and excluded; forecasts are not clipped.
 
-Parameters are fitted using 2021-2023 only. Fixed-parameter one-step filtering through 2024 incorporates previous validation observations without using the current or future target. Missing dates are preserved. All candidates and the persistence baseline are scored on the same dates with observed pollution today and the previous calendar day. Failed/nonconverged candidates are excluded and logged. Predictions are not clipped. The script does not evaluate or forecast 2025, refit the winner on 2021-2024, or claim the test improvement target has been achieved.
+Inspect `output/gap_filling_comparison_best_by_family.csv` for the compact comparison or `output/gap_filling_comparison_all_models.csv` for every candidate. Each run overwrites generated comparison outputs. It does not evaluate 2025.
 
-Additional outputs: `validation_fit_log.csv`, `validation_model_comparison.csv`, `validation_predictions.csv`, `validation_selection.json`, and `figures/validation_predictions.png`. If the baseline wins, that is reported explicitly. Each run replaces these generated outputs.
+### Check the selected model and reproduce the final refit
 
-Forecasting API reference: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAXResults.extend.html
+```powershell
+python3 scripts/model_diagnostics.py
+python3 scripts/refit_selected_model.py
+```
 
-### Original versus corrected history (without interpolation)
+Diagnostics reproduce the corrected/no-fill model's 2024 predictions and save warnings, monthly errors, largest misses, and plots under `output/diagnostics/`. The refit script checks the frozen selection and fits the same settings using **2021-2024**, leaving missing observations blank. It saves the trained model and supporting files under `output/final_model/`.
 
-`model_training.py` now runs the same 38 candidates twice: corrected history first (outputs in `output/`), then original POC-3 history (outputs in `output/original_poc3/`). It verifies common calendar/missing dates and identical 2024 target measurements before comparison. Combined results are saved as `output/poc_comparison_all_models.csv`; the best ARIMA, SARIMA, and baseline per dataset are in `output/poc_comparison_best_by_family.csv`. The original and corrected histories are not averaged or combined during training. Both use 2021-2023 training and 2024 validation; 2025 is not evaluated. The exploratory plots earlier in the script describe the corrected training series only.
+The completed refit converged **without warnings**, using **1,461 calendar days, 1,397 measured values, and 64 missing values**. The saved model was loaded successfully and verified to end on December 31, 2024. Neither script evaluates 2025.
 
-Follow-up requested: revisit missing-value filling experiments later. They are not implemented in the current comparison. Any future filling experiment must respect forecast timing and score against real, common validation measurements.
+## Data preparation decisions
 
-### Selected-model diagnostics
+- Keep Albemarle site 51-003-0001, PM2.5 parameter 88101, and `1 HOUR` daily summaries of hourly readings.
+- Require at least 18 hourly observations per daily average.
+- Prefer event-included over event-excluded alternatives and keep one record per date. Preserve the full calendar.
+- **Original POC 3:** POC 3 throughout, including unaligned method 236 in older dates and aligned method 636 afterward.
+- **Corrected POC:** POC 23/method 736 before August 1, 2023; POC 3/method 636 from that date onward. EPA identifies 736 as retrospectively corrected historical data and 636 as alignment enabled at collection [1], [2]. The correction choice is based on measurement documentation, not only validation scores.
+- **Forward filling:** carry the last observed value forward; leave leading gaps missing. This does not use future readings, but repeats values across long gaps and cannot recover unobserved spikes. The original measurements are retained separately.
 
-After model comparison, run `python3 scripts/model_diagnostics.py` from the repository root (or `python3 model_diagnostics.py` from scripts). It refits the selected corrected-data model on 2021-2023, checks that its 2024 forecasts reproduce the saved predictions, and saves diagnostics in `output/diagnostics/`. Outputs include training model summary, warnings and root magnitudes, calendar-preserving validation error correlations, a four-panel diagnostic figure, monthly MAE, and the ten largest errors. Positive signed error means underprediction. This step neither changes model settings nor evaluates 2025. Review outputs before deciding on any further work or refitting on 2021-2024. Interpolation remains a deferred experiment.
+These are documented refinements to MI2's POC-3-only selection and proposed gap handling. The revised historical series supports retrospective forecast evaluation; it is not an exact recreation of which revisions were available in real time in 2021-2023.
 
-### Preparing forward-filled inputs (optional experiment)
+## Validation results and selected approach
 
-Open `scripts/preprocessing_with_interpolation.ipynb` in VS Code, restart its Python kernel, and run all cells. Despite its filename, the documented method is forward filling. Both original POC-3 and corrected inputs are exported separately under `data/processed/`, with original measurements and fill flags retained. Existing no-fill datasets are not overwritten. See `data/README.md` for filenames, column meanings, limitations, and expected fill counts. This notebook has been adapted but still needs its first verification run. Current `model_training.py` continues to compare only the no-fill datasets until the forward-fill comparison is explicitly added.
+All values below are **2024 validation MAE**, in micrograms per cubic meter. Lower is better. The shared persistence-baseline MAE is **2.274375**.
 
-### Four-way model comparison using notebook exports
+| Dataset | Gap handling | Best ARIMA MAE | Best weekly SARIMA MAE |
+| --- | --- | ---: | ---: |
+| Corrected POC | Leave missing | **2.054515** | 2.067389 |
+| Original POC 3 | Leave missing | 2.054891 | 2.128212 |
+| Corrected POC | Forward fill | 2.058953 | 2.065437 |
+| Original POC 3 | Forward fill | 2.060431 | 2.122653 |
 
-The current training script now reads both forward-filled CSVs from `data/processed/` in addition to the two no-fill CSVs. This supersedes earlier statements that it compares only no-fill data. It verifies the retained original measurements and checks that the filled inputs equal forward filling of the original daily calendar through 2024. All four experiments search the same 38 candidates, using original observed 2024 targets and the original observed persistence baseline on common dates. Filled inputs update the model only after the prediction for their date. Model parameters are fitted on 2021-2023 and remain fixed during validation. No 2025 predictions or scoring are performed.
+**Selected: Corrected POC - ARIMA(2,1,3), without interpolation**, with **9.67% lower validation MAE** than persistence. The original/no-fill ARIMA result was almost tied; the correction did not establish a substantial forecasting improvement. Forward filling did not improve the best overall score. Seasonal conclusions apply only to the weekly candidates tested.
 
-Run `python3 scripts/model_training.py` from the repository root, or `python3 model_training.py` from scripts. It performs 152 candidate fits and prints ALL FOUR EXPERIMENTS. Additional experiment outputs are in `output/original_poc3_forward_filled/` and `output/corrected_forward_filled/`. Combined rankings are `output/gap_filling_comparison_all_models.csv` and `output/gap_filling_comparison_best_by_family.csv`. The existing diagnostics script still checks the corrected/no-fill winner; review the combined results before deciding which approach to diagnose and refit. This expanded script still needs its first verification run.
+Diagnostics reproduced predictions and found near-zero overall signed validation error, but large misses during sudden changes, non-normal training errors, and an MA component near its invertibility boundary remain limitations. Near-zero signed error does not mean small individual errors. See [selection and diagnostic notes](output/model_selection.md).
 
-### Frozen selection and completed refit
+## Remaining stage: 2025 evaluation
 
-The selected approach is Corrected POC - ARIMA(2,1,3), without interpolation. See `output/model_selection.md` for the four-way validation results, limitations, and Eli's evaluation instructions. Run `python3 scripts/refit_selected_model.py` to reproduce the final training fit. It fixes the selected settings and uses 2021-2024 only. The refit completed successfully with 1,461 calendar days, 1,397 measured days, 64 missing observations, and no fit warnings. Saved artifacts are in `output/final_model/`, including the loadable model, parameter estimates, fit summary, history snapshot, metadata/checksums, and exact package versions. The 2025 test evaluation remains unperformed. No model-selection decisions should be changed in response to the eventual 2025 score.
+Eli's evaluation uses the saved final model and the **corrected no-fill CSV**, with settings fixed. Forecast each day before incorporating its measurement; missing observations remain missing. Compare against the observed previous calendar day on identical eligible dates, including December 31, 2024 as the baseline input for January 1, 2025. Report MAE, date count, percentage improvement, and prediction plots. Do not retune settings in response to test results.
+
+Full handoff instructions are in [output/model_selection.md](output/model_selection.md). **The 2025 test has not been evaluated. The validation improvement does not establish the final 10% test target.**
+
+## References
+
+[1] U.S. Environmental Protection Agency, "U.S. EPA Quick Reference Guide to T640/T640X Data," May 13, 2024. [Online]. Available: https://www.epa.gov/system/files/documents/2024-05/quick-reference_t640-data_final_05-13-2024.pdf
+
+[2] U.S. Environmental Protection Agency, "Supplemental Information on the EPA's Update of PM2.5 Data from T640/T640X PM Mass Monitors," May 13, 2024. [Online]. Available: https://www.epa.gov/system/files/documents/2024-05/2_supplemental-info_t640-data-update_final-05-13-2024.pdf
+
+[3] U.S. Environmental Protection Agency, "AirData Download Files." [Online]. Available: https://aqs.epa.gov/aqsweb/airdata/download_files.html
+
+[4] statsmodels developers, "SARIMAXResults.extend." [Online]. Available: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAXResults.extend.html
