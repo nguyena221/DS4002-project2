@@ -1,0 +1,8 @@
+{
+  "scored_date_count": 361,
+  "model_mae": 2.024618808009112,
+  "baseline_mae": 2.2956256315789476,
+  "percent_improvement": 11.805357974829517,
+  "target_improvement_percent": 10.0,
+  "target_met": true
+}
