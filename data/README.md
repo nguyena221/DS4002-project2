@@ -16,9 +16,9 @@ The final analyzed dataset is [albemarle_pm25_corrected_poc_without_interpolatio
 
 ## Provenance and selection
 
-The group downloaded the annual ZIPs directly from EPA AirData [1]. Monitoring agencies report measurements to EPA's Air Quality System; EPA calculates the daily summaries [2]. Exact original download dates were not recorded and are not inferred from file timestamps. [preprocessing_audit.json](processed/preprocessing_audit.json) records original filenames, URLs, SHA-256 checksums, and row counts.
+The group downloaded the annual ZIPs directly from EPA AirData [1]. Monitoring agencies report measurements to EPA's Air Quality System; EPA calculates the daily summaries [2]. Exact original download dates were not recorded and are not inferred from file timestamps. The five original archives and their source URLs are listed in [raw/README.md](raw/README.md).
 
-Zilan prepared the original preprocessing notebooks. The shared `scripts/preprocess_data.py` now reproduces all four CSVs without manual edits. Keep parameter 88101 and `1 HOUR` summaries at this site. The label identifies the underlying sampling duration; Arithmetic Mean is already a daily average. Require >=18 hourly observations. Prefer Included over None over Excluded for repeated eligible dates, then keep one row per date. Preserve the complete calendar. Literal Event Type `None` is a category; an empty calendar row has no measurement or event metadata.
+Zilan prepared the detailed preprocessing notebooks, which are preserved unchanged. Run the no-fill notebook first, then the forward-fill notebook, using the supplied original POC-3 reference CSV. The no-fill notebook regenerates the corrected history; the forward-fill notebook regenerates both filled alternatives. See the root README for exact execution instructions. Keep parameter 88101 and `1 HOUR` summaries at this site. The label identifies the underlying sampling duration; Arithmetic Mean is already a daily average. Require >=18 hourly observations. Prefer Included over None over Excluded for repeated eligible dates, then keep one row per date. Preserve the complete calendar. Literal source Event Type `None` is a category. The original notebooks import it as a null with pandas default parsing, so an empty exported Event_Type does not by itself indicate a missing PM2.5 measurement. Use PM2.5 to identify unmeasured dates.
 
 The corrected history uses **POC 23/method 736 before 2023-08-01** and **POC 3/method 636 from that date onward**. EPA identifies 736 as retrospectively corrected history and 636 as collection-time Network Data Alignment [3], [4]. The original comparison uses POC 3 throughout, with method 236 before the change and 636 afterward. Both histories have identical missing dates and identical measurements from August 2023 onward; **892 older usable values differ**. No correction formula is calculated by this project.
 
@@ -89,7 +89,7 @@ For the 5,595 site rows, Pollutant Standard and AQI each have 2,684 empty fields
 | PM2.5 | Float | Daily observed ug/m3; 67 blanks in no-fill files; filled input in experiments |
 | Observation_Count | Numeric count | Hourly readings; blank on unmeasured dates |
 | Observation_Percent | Float | Completeness, not standard error; blank on unmeasured dates |
-| Event_Type | Category | Selected source category; metadata blank on unmeasured dates |
+| Event_Type | Category | Included/Excluded or blank; source None also exports as blank in the original notebooks; check PM2.5 to identify missing measurements |
 | Method_Code | Identifier | 736/636 corrected; 236/636 original; blank on unmeasured dates |
 | Method_Name | String | Selected method description; blank on unmeasured dates |
 | PM2.5_Original | Float | Filled files only: observed series, preserving 67 blanks |

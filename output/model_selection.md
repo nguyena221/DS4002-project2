@@ -43,4 +43,4 @@ The refit has now completed successfully: 1,461 calendar days spanning January 1
 
 `python scripts/evaluation.py` implements the protocol above. On 361 eligible 2025 dates, model MAE is 2.024618808009112 ug/m3 and persistence MAE is 2.2956256315789476 ug/m3. Improvement is **11.805357974829517%**, meeting the 10% target. There are 362 observed test days; March 11-13 lack measurements and March 14 lacks an observed previous-day baseline. The selected model/settings remain fixed. See [metrics](final_evaluation/evaluation_metrics.json), [predictions](final_evaluation/evaluation_predictions.csv), and [plot](final_evaluation/evaluation_plot.png).
 
-Preprocessing now has a shared command-line entry point, `scripts/preprocess_data.py`, that regenerates all four CSVs directly without notebook edits. Literal Event Type None is preserved; pollution values, selected dates, and model-selection rules are unchanged. Source checksums and missingness are recorded in `data/processed/preprocessing_audit.json`.
+Preprocessing uses the original detailed notebooks, preserved unchanged. See the root README for notebook order and required original POC-3 comparison input.

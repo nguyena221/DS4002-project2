@@ -3,20 +3,18 @@
 An isolated Windows environment was created with CPython 3.14.7 and the six
 direct dependency pins in the root requirements.txt. All 45 resolved packages
 were captured in requirements-lock.txt. The package compatibility check passed.
-The full pipeline was executed successfully in order:
+During the initial cleanup, preprocessing was independently reconstructed with a temporary command-line implementation, then the modeling stages below were executed. That extra preprocessing script was subsequently removed at the team leader's request; the original detailed notebooks and their original CSV exports are restored. The modeling/evaluation rerun and exact result checks below remain valid. The restored notebooks were not re-executed during this restoration. The original verification sequence was:
 
-1. scripts/preprocess_data.py
+1. Independent preprocessing reconstruction (removed; use original notebooks for reproduction)
 2. scripts/model_training.py
 3. scripts/model_diagnostics.py
 4. scripts/refit_selected_model.py
 5. scripts/evaluation.py
 
 Preprocessing rebuilt all four datasets from the five archived ZIPs. Observed
-pollution values and calendars matched the previously committed series. The
-export now preserves literal Event Type None instead of silently importing it
-as a null. The 67 missing PM2.5 values split as 17/28/6/13/3 across 2021-2025.
+pollution values and calendars matched the previously committed series. The original notebook-generated exports are retained, including their original handling of Event Type None as a null; PM2.5 values and dates are unchanged. The 67 missing PM2.5 values split as 17/28/6/13/3 across 2021-2025.
 Both forward-filled alternatives supplied 61 values and retained six leading
-blanks. Source checksums and row counts are in data/processed/preprocessing_audit.json.
+blanks. The five original ZIP files remain included unchanged.
 
 All 152 candidate fits were rerun. The selected model remained corrected-history
 ARIMA(2,1,3), with no filling, validation MAE 2.0545148122046104 on 349 shared
