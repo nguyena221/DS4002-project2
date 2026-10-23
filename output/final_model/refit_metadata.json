@@ -34,7 +34,7 @@
     "statsmodels": "0.15.0"
   },
   "history_sha256": "9fa3a80a877ff7cca6b4f7970f495a78c709455e3223c2c1554dd16a90cf079e",
-  "model_sha256": "25e7904fcbf1fd09239e0d08f46af4a31ab1a2e726ce44bf51fc1e2a0359c3fa",
+  "model_sha256": "ce58d91d646e7f77de50d80992daec4ffec6a9387f7d8e25d511915132aa5a34",
   "test_evaluated": false,
   "forecast_clipping": "none"
 }

@@ -5,6 +5,7 @@ author: eli boyden
 """
 
 import json
+import hashlib
 from pathlib import Path
 
 import matplotlib
@@ -121,7 +122,15 @@ def main():
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Verify this is the frozen team-authored artifact before loading the pickle.
+    metadata = json.loads((MODEL_PATH.parent / "refit_metadata.json").read_text(encoding="utf-8"))
+    if hashlib.sha256(MODEL_PATH.read_bytes()).hexdigest() != metadata["model_sha256"]:
+        raise ValueError("Saved model checksum differs from refit metadata")
+    if metadata["refit_end"] != "2024-12-31":
+        raise ValueError("Final model must end before the test year")
     model = SARIMAXResults.load(MODEL_PATH)
+    if pd.Timestamp(model.model.data.dates[-1]) != pd.Timestamp("2024-12-31"):
+        raise ValueError("Loaded model state does not end on December 31, 2024")
     observed_window = load_observed_series()
     observed_2025 = observed_window.loc["2025-01-01":"2025-12-31"]
 
@@ -171,6 +180,28 @@ def main():
         model_prediction,
         persistence_prediction,
         eligible,
+    )
+
+    # Recreate the human-readable result too, rather than leaving a stale report.
+    SUMMARY_PATH.write_text(
+        "# Final evaluation (2025)\n\n"
+        "Frozen model: corrected-history ARIMA(2,1,3), no filling. "
+        "Fitted on 2021-2024; each test date is forecast before its observation "
+        "updates the state. Parameters and selection settings stay fixed.\n\n"
+        f"- Calendar test dates: {len(observed_2025)}\n"
+        f"- Observed test dates: {int(observed_2025.notna().sum())}\n"
+        f"- Shared scoring dates: {int(eligible.sum())}\n"
+        f"- Model MAE: {model_mae:.6f} ug/m3\n"
+        f"- Persistence MAE: {baseline_mae:.6f} ug/m3\n"
+        f"- Improvement: {percent_improvement:.6f}%\n"
+        f"- At least 10% improvement achieved: {target_met}\n\n"
+        "The baseline uses the previous calendar day's observed value, including "
+        "December 31, 2024 for January 1. Only dates with an observed target and "
+        "observed previous day are scored; no filled targets are used. "
+        "This is retrospective evaluation using EPA-revised historical data, "
+        "not a live forecasting service.\n\n"
+        "![2025 predictions](evaluation_plot.png)\n",
+        encoding="utf-8",
     )
 
     print(f"scored date count: {metrics['scored_date_count']}")

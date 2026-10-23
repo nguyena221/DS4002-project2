@@ -21,9 +21,9 @@ Initial selected-model diagnostics reproduced validation predictions. Convergenc
 
 ## Refit (Annie's training stage)
 
-Run `python3 refit_selected_model.py` from `scripts/` (or `python3 scripts/refit_selected_model.py` from the repository root). It keeps settings fixed and refits on 2021-2024. Successful execution saves the model, fit metadata, parameters, package versions, and a 2021-2024 history snapshot in `output/final_model/`. Check its convergence and warnings before handoff. These artifacts do not exist until the script completes successfully.
+Run `python3 refit_selected_model.py` from `scripts/` (or `python3 scripts/refit_selected_model.py` from the repository root). It keeps settings fixed and refits on 2021-2024. Successful execution saves the model, fit metadata, parameters, package versions, and a 2021-2024 history snapshot in `output/final_model/`. Check its convergence and warnings before handoff. The committed refit artifacts are present; the script recreates them.
 
-## Eli's final evaluation
+## Final evaluation protocol (implemented in scripts/evaluation.py)
 
 1. Use the saved model and matching environment recorded in `final_model/refit_metadata.json`. Only load the project's own trusted model pickle. Load with `statsmodels.tsa.statespace.sarimax.SARIMAXResults.load(model_path)`; the saved state ends on December 31, 2024.
 2. Use observed 2025 values from `data/processed/albemarle_pm25_corrected_poc_without_interpolation.csv`. Preserve all calendar dates and missing observations. Do not switch to a filled dataset.
@@ -36,4 +36,11 @@ No 2025 prediction or evaluation is performed by the refit script. This document
 
 ## Completed refit status
 
-The refit has now completed successfully: 1,461 calendar days spanning January 1, 2021 through December 31, 2024; 1,397 measured and 64 missing values. Optimization converged without warnings. Artifacts listed above are present in `output/final_model/`. No 2025 forecasts or scores were produced. The model pickle was subsequently loaded successfully and its sample end date and checksum verified.
+The refit has now completed successfully: 1,461 calendar days spanning January 1, 2021 through December 31, 2024; 1,397 measured and 64 missing values. Optimization converged without warnings. Artifacts listed above are present in `output/final_model/`. The refit itself produces no 2025 forecasts; the subsequent evaluation script produces the test results below. The model pickle was subsequently loaded successfully and its sample end date and checksum verified.
+
+
+## Completed final evaluation
+
+`python scripts/evaluation.py` implements the protocol above. On 361 eligible 2025 dates, model MAE is 2.024618808009112 ug/m3 and persistence MAE is 2.2956256315789476 ug/m3. Improvement is **11.805357974829517%**, meeting the 10% target. There are 362 observed test days; March 11-13 lack measurements and March 14 lacks an observed previous-day baseline. The selected model/settings remain fixed. See [metrics](final_evaluation/evaluation_metrics.json), [predictions](final_evaluation/evaluation_predictions.csv), and [plot](final_evaluation/evaluation_plot.png).
+
+Preprocessing now has a shared command-line entry point, `scripts/preprocess_data.py`, that regenerates all four CSVs directly without notebook edits. Literal Event Type None is preserved; pollution values, selected dates, and model-selection rules are unchanged. Source checksums and missingness are recorded in `data/processed/preprocessing_audit.json`.

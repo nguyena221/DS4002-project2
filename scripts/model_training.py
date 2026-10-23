@@ -319,5 +319,5 @@ print(best_by_experiment[[
     "improvement_percent", "scored_days"
 ]].to_string(index=False))
 print("All experiments used observed answers, the same baseline, and the same scoring dates.")
-print("2025 remains unevaluated. Final refitting has not been performed.")
+print("This training script does not refit or evaluate 2025; continue with diagnostics, refit, and evaluation.")
 

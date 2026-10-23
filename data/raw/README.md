@@ -1,15 +1,13 @@
-# Original EPA files needed
+# Original EPA files
 
-The supplied notebook expects these annual EPA AirData PM2.5 daily-summary archives:
+All five original ZIPs are included. Do not extract or edit them; preprocessing reads each CSV inside its ZIP. If missing, use the matching direct source:
 
-- daily_88101_2021.zip
-- daily_88101_2022.zip
-- daily_88101_2023.zip
-- daily_88101_2024.zip
-- daily_88101_2025.zip
+- [daily_88101_2021.zip](https://aqs.epa.gov/aqsweb/airdata/daily_88101_2021.zip)
+- [daily_88101_2022.zip](https://aqs.epa.gov/aqsweb/airdata/daily_88101_2022.zip)
+- [daily_88101_2023.zip](https://aqs.epa.gov/aqsweb/airdata/daily_88101_2023.zip)
+- [daily_88101_2024.zip](https://aqs.epa.gov/aqsweb/airdata/daily_88101_2024.zip)
+- [daily_88101_2025.zip](https://aqs.epa.gov/aqsweb/airdata/daily_88101_2025.zip)
 
-These five source files are included in this repository. They are required to independently reproduce the preprocessing. The VS Code notebook reads these files directly from `data/raw/`.
+Original download dates were not recorded. Do not substitute filesystem dates. Run `python scripts/preprocess_data.py` from the repository root to rebuild the derived files and `data/processed/preprocessing_audit.json`, which records SHA-256 checksums, source URLs, and row counts. Future EPA downloads may differ from archived inputs; investigate checksum differences before comparing results.
 
-Record download dates and source URLs when the files are obtained. The five annual ZIP files are allowed by .gitignore; extracted copies are not needed.
-
-
+See [dataset metadata](../README.md) for definitions, source terms, and selection.

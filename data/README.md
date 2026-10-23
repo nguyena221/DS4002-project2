@@ -1,61 +1,119 @@
-# Dataset metadata (in progress)
+# Dataset metadata
 
-## Data summary
+## Data summary and access
 
-EPA daily PM2.5 summaries for 2021-2025 will be filtered to Albemarle site 51-003-0001, parameter 88101, POC 23/method 736 before August 1, 2023 and POC 3/method 636 from that date onward, and Sample Duration `1 HOUR`. These rows summarize hourly readings by day. The planned coverage threshold is at least 18 hourly observations per daily average.
+All data needed to reproduce this project are included here: five original EPA ZIPs in [raw/](raw/) and four derived CSVs in [processed/](processed/). The ZIPs contain 4,000,854 nationwide daily-summary records for PM2.5 parameter 88101 in 2021-2025. Filtering to site **51-003-0001**, Albemarle High School, produces 5,595 records across 1,791 dates before monitor/summary selection. These are summaries, not 5,595 independent daily concentrations.
 
-We are starting without interpolation. Missing measurements will remain blank, with calendar dates preserved. The original POC-3-only export was verified and preserved as `processed/albemarle_pm25_poc3_without_interpolation.csv`. The revised notebook needs rerunning to replace `processed/albemarle_pm25_corrected_poc_without_interpolation.csv` with the adjusted series. Independent checking of the raw files predicts 1,826 calendar dates, 1,759 usable measurements, 67 missing days, 892 changed older values, and no changed newer values or missing dates.
+The final analyzed dataset is [albemarle_pm25_corrected_poc_without_interpolation.csv](processed/albemarle_pm25_corrected_poc_without_interpolation.csv). It has **1,826 calendar rows, 1,759 measured values, and 67 missing PM2.5 values**. One row is one local calendar day. Concentrations are in micrograms per cubic meter at local conditions (ug/m3). Missingness includes unavailable readings and days excluded by the >=18-hourly-observation rule; blank days are not zero.
 
-## Provenance
+| Year | Calendar days | Measured days | Missing days |
+| --- | ---: | ---: | ---: |
+| 2021 | 365 | 348 | 17 |
+| 2022 | 365 | 337 | 28 |
+| 2023 | 365 | 359 | 6 |
+| 2024 | 366 | 353 | 13 |
+| 2025 | 365 | 362 | 3 |
 
-Zilan prepared the preprocessing notebook. The input is five annual EPA AirData PM2.5 daily-summary archives, listed in `raw/README.md`. Download dates and checksums are pending.
+## Provenance and selection
 
-## License
+The group downloaded the annual ZIPs directly from EPA AirData [1]. Monitoring agencies report measurements to EPA's Air Quality System; EPA calculates the daily summaries [2]. Exact original download dates were not recorded and are not inferred from file timestamps. [preprocessing_audit.json](processed/preprocessing_audit.json) records original filenames, URLs, SHA-256 checksums, and row counts.
 
-The project plan describes EPA source data as public-domain U.S. government data. Record verified source terms here when obtaining the files. The repository MIT license covers team-authored work and does not relicense third-party materials.
+Zilan prepared the original preprocessing notebooks. The shared `scripts/preprocess_data.py` now reproduces all four CSVs without manual edits. Keep parameter 88101 and `1 HOUR` summaries at this site. The label identifies the underlying sampling duration; Arithmetic Mean is already a daily average. Require >=18 hourly observations. Prefer Included over None over Excluded for repeated eligible dates, then keep one row per date. Preserve the complete calendar. Literal Event Type `None` is a category; an empty calendar row has no measurement or event metadata.
 
-## Ethical statement
+The corrected history uses **POC 23/method 736 before 2023-08-01** and **POC 3/method 636 from that date onward**. EPA identifies 736 as retrospectively corrected history and 636 as collection-time Network Data Alignment [3], [4]. The original comparison uses POC 3 throughout, with method 236 before the change and 636 afterward. Both histories have identical missing dates and identical measurements from August 2023 onward; **892 older usable values differ**. No correction formula is calculated by this project.
 
-These are ambient pollution measurements, not personal records. Predictions are for an academic project, not official public-health guidance. Report missing periods, uncertainty, and measurement-method changes honestly. Do not treat estimated values as actual observations when evaluating predictions.
+Event labels differ between measurement versions. Original records retained by EPA can be excluded from regulatory use; this alone does not prove a wildfire or other physical event. We do not infer causes from these flags. Retrospectively revised history does not recreate which revisions were available in real time in 2021-2023.
 
-## Planned processed-data dictionary
+## Derived datasets and missing-data experiments
 
-Confirm these fields against the freshly exported CSV before finalizing this dictionary.
-
-| Column | Meaning | Units / interpretation |
+| File under processed/ | History | Gap handling |
 | --- | --- | --- |
-| Date | Local calendar date | YYYY-MM-DD; one row per day |
-| PM2.5 | EPA daily Arithmetic Mean | Micrograms per cubic meter; blank when no usable measurement |
-| Observation_Count | Hourly readings contributing to the daily summary | Count |
-| Observation_Percent | Percentage of expected observations obtained | Percent |
-| Event_Type | EPA event-handling category | Text; a blank alone does not mean the pollution value is missing |
-| Method_Code | EPA measurement method identifier | Categorical code |
-| Method_Name | Description of measurement method | Text |
+| albemarle_pm25_corrected_poc_without_interpolation.csv | Corrected | Selected final dataset; leave 67 gaps blank |
+| albemarle_pm25_poc3_without_interpolation.csv | Original POC 3 | Leave 67 gaps blank |
+| albemarle_pm25_corrected_poc_forward_filled.csv | Corrected | Forward-fill model inputs only |
+| albemarle_pm25_poc3_forward_filled.csv | Original POC 3 | Forward-fill model inputs only |
 
-Initial-data field documentation and final analyzed-data details remain to be completed.
+Each filled experiment supplies **61 values** and retains **six leading blanks**. Forward filling repeats the latest past observation; it is not linear interpolation. It repeats readings even across long gaps and cannot recover unobserved spikes. Actual targets remain in `PM2.5_Original`. Filled values are never treated as observed scoring targets or baseline answers. Validation selected the corrected no-fill approach. State-space filtering handles gaps while preserving calendar spacing. The final analysis therefore did not use linear interpolation or truncate to a consecutive period as proposed in MI2.
+
+## Source terms and citation
+
+EPA publishes these records for public download [1]. We did not identify a dataset-specific license on that page. EPA publication alone does not establish that every contributed record is a federal government work. EPA's general disclaimer distinguishes its own and third-party material and advises attention to metadata [5]. We credit EPA and reporting agencies and preserve provenance. The repository MIT license applies to team-authored code/documentation, not a new license for EPA source records. No broader claim of unrestricted rights is made.
+
+## Ethical statement, uncertainty, and limitations
+
+These are ambient pollution measurements, not personal records. Predictions are academic retrospective forecasts, not official public-health guidance. One site does not represent every person's exposure or all of Virginia. Instrument uncertainty is not supplied as a per-reading standard error; observation coverage measures completeness, not precision. Missing periods, method changes, historical revisions, pollution spikes, and forecast errors limit interpretation. Do not treat estimated inputs as measurements. Report test performance without test-driven retuning.
+
+## Initial-data dictionary (29 EPA fields)
+
+Types describe parsed meanings; CSV itself has no enforced types. Preserve leading zeroes when treating geographic codes as strings. Blank fields and category `None` must remain distinguishable [2].
+
+| Field | Type | Meaning / units |
+| --- | --- | --- |
+| State Code | Identifier | State FIPS; 51 here |
+| County Code | Identifier | County FIPS; 003 here |
+| Site Num | Identifier | Site within county; 0001 here |
+| Parameter Code | Identifier | Pollutant; 88101 |
+| POC | Identifier | Parameter occurrence code distinguishing monitors at a site |
+| Latitude | Float | Decimal degrees north |
+| Longitude | Float | Decimal degrees east; negative here |
+| Datum | String | Coordinate reference datum, WGS84 |
+| Parameter Name | String | PM2.5 - Local Conditions |
+| Sample Duration | String | Duration of underlying sample or derived averaging interval |
+| Pollutant Standard | Optional string | Regulatory summary rules; blank on selected 1 HOUR rows |
+| Date Local | Date | Local measurement calendar date |
+| Units of Measure | String | Micrograms/cubic meter (LC) |
+| Event Type | Category | None, Included, Excluded; None is not missing |
+| Observation Count | Integer | Number of underlying observations used |
+| Observation Percent | Float | Percentage of expected observations obtained |
+| Arithmetic Mean | Float | Daily mean concentration |
+| 1st Max Value | Float | Highest underlying value in this summary |
+| 1st Max Hour | Integer | Local hour associated with maximum |
+| AQI | Optional integer | Air Quality Index; blank on selected 1 HOUR rows |
+| Method Code | Identifier | EPA method code |
+| Method Name | String | Measurement/analysis method description |
+| Local Site Name | String | Albemarle High School |
+| Address | String | Site location description |
+| State Name | String | Virginia |
+| County Name | String | Albemarle |
+| City Name | String | Not in a city (legal city boundaries) |
+| CBSA Name | String | Charlottesville, VA metropolitan area |
+| Date of Last Change | Date | AQS record update date, not download date |
+
+For the 5,595 site rows, Pollutant Standard and AQI each have 2,684 empty fields; other columns have no empty strings. Event Type has 3,793 None, 1,800 Included, and two Excluded records. These counts describe all site summary types before final selection, not nationwide records.
+
+## Final and experimental data dictionary
+
+| Column | Type | Meaning / missingness |
+| --- | --- | --- |
+| Date | Date | Complete daily calendar; never missing or duplicated |
+| PM2.5 | Float | Daily observed ug/m3; 67 blanks in no-fill files; filled input in experiments |
+| Observation_Count | Numeric count | Hourly readings; blank on unmeasured dates |
+| Observation_Percent | Float | Completeness, not standard error; blank on unmeasured dates |
+| Event_Type | Category | Selected source category; metadata blank on unmeasured dates |
+| Method_Code | Identifier | 736/636 corrected; 236/636 original; blank on unmeasured dates |
+| Method_Name | String | Selected method description; blank on unmeasured dates |
+| PM2.5_Original | Float | Filled files only: observed series, preserving 67 blanks |
+| Was_Filled | Boolean | Filled files only: true if supplied by forward filling |
+| Fill_Source_Date | Date | Filled files only: latest observed source date; own date on measured rows; six leading blanks |
+
+No-fill files contain the first seven columns; filled files add the last three. Measurement metadata is not fabricated on filled days. The POC selection is documented above, not an additional export column.
 
 ## Explanatory plots
 
-At least two are required by MI3 and have not yet been generated. Proposed plots: observed PM2.5 over time with gaps visible, and the distribution of observed PM2.5. Save finished plots in `output/figures/` and embed them here.
+These plots use observed **2021-2023 training data only**. The first shows changes and gaps; the second shows a right-skewed distribution with occasional high values. Neither proves seasonality or identifies causes.
+
+![Training daily PM2.5 with gaps](../output/figures/training_pm25_over_time.png)
+
+![Distribution of observed training PM2.5](../output/figures/training_pm25_distribution.png)
 
 ## References
 
-[1] U.S. Environmental Protection Agency, "AirData Download Files." [Online]. Available: https://aqs.epa.gov/aqsweb/airdata/download_files.html. Record download dates when the source files are obtained.
+[1] U.S. Environmental Protection Agency, "AirData Download Files." [Online]. Available: https://aqs.epa.gov/aqsweb/airdata/download_files.html. [Accessed: Oct. 23, 2026].
 
-## Measurement-selection revision
+[2] U.S. Environmental Protection Agency, "AirData Download Files Documentation," Dec. 1, 2015. [Online]. Available: https://aqs.epa.gov/aqsweb/airdata/FileFormats.html. [Accessed: Oct. 23, 2026].
 
-The original plan selected POC 3 throughout. EPA documentation identifies method 236 as unaligned, method 736 as retrospectively corrected, and method 636 as alignment enabled during collection. The revised selection uses existing method-736 records under POC 23 before 2023-08-01 and method-636 records under POC 3 afterward. No correction formula or interpolation is calculated by this notebook.
+[3] U.S. Environmental Protection Agency, "U.S. EPA Quick Reference Guide to T640/T640X Data," May 13, 2024. [Online]. Available: https://www.epa.gov/system/files/documents/2024-05/quick-reference_t640-data_final_05-13-2024.pdf. [Accessed: Oct. 23, 2026].
 
-The corrected records have different Event Type metadata: 903 method-736 records are labeled None and one Included before coverage filtering. The revised filter does not reject None records or interpret their changed labels as proof that a pollution event disappeared. The only repeated selected date remains 2024-03-21; the Included record is retained over the Excluded alternative. EPA's supplemental explanation states that original unaligned records were retained and marked NAAQS Excluded; regulatory exclusion should not be confused with proof of a wildfire. Site-specific event-flag equivalence has not been independently established.
+[4] U.S. Environmental Protection Agency, "Supplemental Information on the EPA's Update of PM2.5 Data from T640/T640X PM Mass Monitors," May 13, 2024. [Online]. Available: https://www.epa.gov/system/files/documents/2024-05/2_supplemental-info_t640-data-update_final-05-13-2024.pdf. [Accessed: Oct. 23, 2026].
 
-The revised dataset uses retrospectively revised historical data. Forecast validation must still avoid future pollution observations, but it is not a reconstruction of exactly which data revisions were available in real time in 2021-2023. Retrospective and collection-time alignment are related methods, not a guarantee of identical processing in all conditions.
-
-[2] U.S. Environmental Protection Agency, "Quick Reference Guide to T640/T640X Data," May 13, 2024. https://www.epa.gov/system/files/documents/2024-05/quick-reference_t640-data_final_05-13-2024.pdf
-
-[3] U.S. Environmental Protection Agency, "Supplemental Information on the EPA's Update of PM2.5 Data from T640/T640X PM Mass Monitors," May 13, 2024. https://www.epa.gov/system/files/documents/2024-05/2_supplemental-info_t640-data-update_final-05-13-2024.pdf
-
-## Forward-fill preprocessing notebook
-
-`scripts/preprocessing_with_interpolation.ipynb` now uses forward filling, not linear interpolation. It reads raw ZIPs in chunks, builds original POC-3 and corrected observed series with the established quality/duplicate rules, and verifies those series against the no-fill exports before filling. It exports `albemarle_pm25_poc3_forward_filled.csv` and `albemarle_pm25_corrected_poc_forward_filled.csv`. Each retains `PM2.5_Original`, adds `Was_Filled` and `Fill_Source_Date`, and supplies forward-filled model inputs in `PM2.5`. Measurement metadata is not fabricated for filled days. Source dates must precede filled dates. Leading gaps stay missing; the expected result for each dataset is 61 filled values and six leading blanks. Those are expectations pending a notebook run, not generated results.
-
-The forward-fill experiment repeats the last observation even across long gaps; it cannot recover unseen pollution spikes. It is an optional comparison, separate from the current no-fill model-training workflow. The training script has not yet been connected to these new exports. When added, validation targets and baseline values must come from `PM2.5_Original`, with the same eligible observed dates, and 2025 must remain reserved for final evaluation.
+[5] U.S. Environmental Protection Agency, "EPA Disclaimers." [Online]. Available: https://www.epa.gov/web-policies-and-procedures/epa-disclaimers. [Accessed: Oct. 23, 2026].

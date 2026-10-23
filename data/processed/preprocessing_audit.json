@@ -1,0 +1,79 @@
+{
+  "sources": [
+    {
+      "file": "daily_88101_2021.zip",
+      "csv": "daily_88101_2021.csv",
+      "nationwide_rows": 790468,
+      "site_rows_all_summary_types": 1520,
+      "url": "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2021.zip",
+      "sha256": "c3f876f8cd898c3bd921db45e1a2dd39c52ed7f5bb48e82a600066a434f6afd4",
+      "original_download_date": "not recorded"
+    },
+    {
+      "file": "daily_88101_2022.zip",
+      "csv": "daily_88101_2022.csv",
+      "nationwide_rows": 863466,
+      "site_rows_all_summary_types": 1469,
+      "url": "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2022.zip",
+      "sha256": "82f5035943a447f8edebf1f0b3f774e08b81a250a86295871a8574726d6b2f94",
+      "original_download_date": "not recorded"
+    },
+    {
+      "file": "daily_88101_2023.zip",
+      "csv": "daily_88101_2023.csv",
+      "nationwide_rows": 847162,
+      "site_rows_all_summary_types": 1167,
+      "url": "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2023.zip",
+      "sha256": "4b40502e8147419643a1120c666c4aa952633094f21f65475844172bcc78833b",
+      "original_download_date": "not recorded"
+    },
+    {
+      "file": "daily_88101_2024.zip",
+      "csv": "daily_88101_2024.csv",
+      "nationwide_rows": 740924,
+      "site_rows_all_summary_types": 713,
+      "url": "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2024.zip",
+      "sha256": "409c2d884935bd0a4099d640b7c526ecb0af1d3aac049697e34c2f9f69dbe91d",
+      "original_download_date": "not recorded"
+    },
+    {
+      "file": "daily_88101_2025.zip",
+      "csv": "daily_88101_2025.csv",
+      "nationwide_rows": 758834,
+      "site_rows_all_summary_types": 726,
+      "url": "https://aqs.epa.gov/aqsweb/airdata/daily_88101_2025.zip",
+      "sha256": "cc8cb80bcc0317705202d12a472918438b8bee60316f54777d6f748c58ac2661",
+      "original_download_date": "not recorded"
+    }
+  ],
+  "datasets": {
+    "poc3": {
+      "calendar_days": 1826,
+      "observed_days": 1759,
+      "missing_days": 67,
+      "missing_by_year": {
+        "2021": 17,
+        "2022": 28,
+        "2023": 6,
+        "2024": 13,
+        "2025": 3
+      },
+      "forward_filled_days": 61,
+      "leading_missing_after_fill": 6
+    },
+    "corrected_poc": {
+      "calendar_days": 1826,
+      "observed_days": 1759,
+      "missing_days": 67,
+      "missing_by_year": {
+        "2021": 17,
+        "2022": 28,
+        "2023": 6,
+        "2024": 13,
+        "2025": 3
+      },
+      "forward_filled_days": 61,
+      "leading_missing_after_fill": 6
+    }
+  }
+}

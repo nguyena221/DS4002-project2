@@ -1,14 +1,15 @@
-# 2025 evaluation summary
+# Final evaluation (2025)
 
-- total scored dates: 361
-    - 2025-03-11, 2025-03-12, 2025-03-13 had missing PM2.5 values, these were left out since we decided to not use iterpolation
-    - the final missing date is 2025-03-14, since 2025-03-13 is missing, there is no baseline prediction for 2025-03-14
-    - this means 4 missing dates were in our test set
-- predicted MAE: 2.024619
-- baseline MAE: 2.295626
-- percent improvement: 11.805358%
+Frozen model: corrected-history ARIMA(2,1,3), no filling. Fitted on 2021-2024; each test date is forecast before its observation updates the state. Parameters and selection settings stay fixed.
 
-This means that we successfully hit our target of a 10% reduction from baseline!
+- Calendar test dates: 365
+- Observed test dates: 362
+- Shared scoring dates: 361
+- Model MAE: 2.024619 ug/m3
+- Persistence MAE: 2.295626 ug/m3
+- Improvement: 11.805358%
+- At least 10% improvement achieved: True
 
-Details were saved as json in `output/final_evaluation/evaluation_metrics.json`.
+The baseline uses the previous calendar day's observed value, including December 31, 2024 for January 1. Only dates with an observed target and observed previous day are scored; no filled targets are used. This is retrospective evaluation using EPA-revised historical data, not a live forecasting service.
 
+![2025 predictions](evaluation_plot.png)
