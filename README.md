@@ -20,6 +20,22 @@ Tested on **Windows, CPython 3.14.7**, with VS Code/PowerShell/Git. The notebook
 
 `requirements.txt` pins direct dependencies including notebook support. **`requirements-lock.txt` pins all 45 resolved packages from the tested Windows environment**, including transitive dependencies. Use the lock file for closest reproduction. Other operating systems/Python versions are not tested; Windows-specific packages in the lock may require adaptation. Exact numerical equality across different numerical-library/platform combinations is not promised. The saved pickle is version-sensitive; use matching versions or rebuild it with the refit script. Load only trusted team-created pickle files.
 
+### Confirmed environment: both preprocessing notebooks
+
+Both `scripts/preprocessing_with_interpolation.ipynb` and `scripts/preprocessing_without_interpolation.ipynb` reported the same environment:
+
+```text
+Python: 3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]
+numpy==2.5.3
+pandas==3.0.5
+scipy==1.18.1
+statsmodels==0.15.0
+matplotlib==3.11.1
+ipykernel==7.3.0
+```
+
+These are the reported installed versions; both preprocessing notebooks import pandas and NumPy, plus Python standard-library modules. The without-interpolation notebook leaves missing values blank. Despite its filename, the with-interpolation notebook performs forward filling, not linear interpolation.
+
 ## 2. Documentation map
 
 ```text
