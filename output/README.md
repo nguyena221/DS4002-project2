@@ -84,6 +84,8 @@ Each contains the same four filenames: **validation_fit_log.csv**, **validation_
 
 ## final_model/
 
+Install dependencies using the single root `requirements.txt`. Core versions used for the refit are also recorded as metadata in `refit_metadata.json`; no second dependency file is needed.
+
 | File | What it means |
 | --- | --- |
 | corrected_poc_arima_2_1_3_without_interpolation.pkl | Frozen ARIMA model fitted through December 31, 2024, including the filtered state needed to start forecasting January 1, 2025. |
@@ -91,7 +93,6 @@ Each contains the same four filenames: **validation_fit_log.csv**, **validation_
 | refit_history_2021_2024.csv | The exact daily PM2.5 input history used for refitting; 1,461 dates including 64 missing values. |
 | refit_metadata.json | Model settings, period, counts, convergence/warnings, versions, and file fingerprints. test_evaluated=false means refitting itself did not evaluate the test; see final_evaluation/ for the subsequent test. |
 | refit_summary.txt | Fit report for the 2021-2024 final model, distinct from the training-only diagnostic summary. |
-| requirements.txt | Historical core versions used for refitting/loading. For the complete project environment, use the root requirements-lock.txt, which also includes plots/notebook support. |
 
 ## final_evaluation/
 

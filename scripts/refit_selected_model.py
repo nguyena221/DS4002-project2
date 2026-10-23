@@ -92,9 +92,8 @@ metadata = {
     "test_evaluated": False, "forecast_clipping": "none",
 }
 (destination / "refit_metadata.json").write_text(json.dumps(metadata, indent=2), encoding="utf-8")
-(destination / "requirements.txt").write_text(
-    "".join(f"{name}=={version}\n" for name, version in versions.items()), encoding="utf-8"
-)
+# Package versions remain in refit_metadata.json; use the root requirements.txt
+# to install the complete environment instead of generating a second file.
 print("Refit converged. Warnings:", metadata["warnings"])
 print("Saved trained model:", model_file)
 print("Saved history, parameters, fit summary, metadata, and package versions:", destination)

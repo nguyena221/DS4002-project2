@@ -1,8 +1,6 @@
 # Reproduction check - October 23, 2026
 
-An isolated Windows environment was created with CPython 3.14.7 and the six
-direct dependency pins in the root requirements.txt. All 45 resolved packages
-were captured in requirements-lock.txt. The package compatibility check passed.
+An isolated Windows environment was created with CPython 3.14.7 and the six direct dependency pins. All 45 resolved packages are now consolidated in the single root requirements.txt. The installed versions are unchanged by this consolidation. The package compatibility check passed.
 During the initial cleanup, preprocessing was independently reconstructed with a temporary command-line implementation, then the modeling stages below were executed. That extra preprocessing script was subsequently removed at the team leader's request; the original detailed notebooks and their original CSV exports are restored. The modeling/evaluation rerun and exact result checks below remain valid. The restored notebooks were not re-executed during this restoration. The original verification sequence was:
 
 1. Independent preprocessing reconstruction (removed; use original notebooks for reproduction)

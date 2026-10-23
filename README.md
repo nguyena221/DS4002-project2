@@ -20,7 +20,9 @@ We forecast the next day's average PM2.5 at EPA site **51-003-0001**, Albemarle 
 
 Tested on **Windows, CPython 3.14.7**, with VS Code/PowerShell/Git. The notebooks and modeling scripts require numpy 2.5.3, pandas 3.0.5, scipy 1.18.1, statsmodels 0.15.0, and matplotlib 3.11.1. Optional notebook use is supported by ipykernel 7.3.0. Python's pathlib, csv, json, zipfile, hashlib, warnings, and itertools are standard-library modules; do not install them separately.
 
-`requirements.txt` pins direct dependencies including notebook support. **`requirements-lock.txt` pins all 45 resolved packages from the tested Windows environment**, including transitive dependencies. Use the lock file for closest reproduction. Other operating systems/Python versions are not tested; Windows-specific packages in the lock may require adaptation. Exact numerical equality across different numerical-library/platform combinations is not promised. The saved pickle is version-sensitive; use matching versions or rebuild it with the refit script. Load only trusted team-created pickle files.
+**`requirements.txt` is the single dependency file for this project.** It lists all **45 packages and their exact versions** from the tested Windows environment, including the main libraries, their supporting dependencies, plotting, and notebook support. Install the complete environment with `pip install -r requirements.txt`.
+
+Other operating systems/Python versions are not tested; Windows-specific packages in the lock may require adaptation. Exact numerical equality across different numerical-library/platform combinations is not promised. The saved pickle is version-sensitive; use matching versions or rebuild it with the refit script. Load only trusted team-created pickle files.
 
 ### Confirmed environment: both preprocessing notebooks
 
@@ -45,7 +47,6 @@ DS4002-project2/
 |-- README.md
 |-- LICENSE.md
 |-- requirements.txt
-|-- requirements-lock.txt
 |-- .gitignore
 |-- scripts/
 |   |-- preprocessing_without_interpolation.ipynb # Original detailed corrected-history notebook
@@ -90,8 +91,7 @@ DS4002-project2/
     |-- final_model/
     |   |-- corrected_poc_arima_2_1_3_without_interpolation.pkl
     |   |-- fitted_parameters.csv / refit_history_2021_2024.csv
-    |   |-- refit_metadata.json / refit_summary.txt
-    |   `-- requirements.txt                      # Refit-only historical environment
+    |   `-- refit_metadata.json / refit_summary.txt
     `-- final_evaluation/
         |-- evaluation_predictions.csv / evaluation_metrics.json
         |-- evaluation_summary.md
@@ -110,7 +110,7 @@ Install CPython **3.14.7** (64-bit) and Git. Clone the repository and open Power
 git clone https://github.com/nguyena221/DS4002-project2.git
 cd DS4002-project2
 py -3.14 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m pip check
 ```
 
