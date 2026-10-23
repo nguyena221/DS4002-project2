@@ -8,6 +8,8 @@ We forecast the next day's average PM2.5 at EPA site **51-003-0001**, Albemarle 
 
 ## Repository contents
 
+- [Script and output file guide](output/README.md): what every script does, what each result file contains, and which files to use for the presentation.
+
 - [Data metadata](data/README.md): access, provenance, terms, ethics, original/derived dictionaries, missingness, and two exploratory plots.
 - [Selection and results](output/model_selection.md): model comparisons, diagnostics, changes from MI2, and final evaluation.
 - [Final evaluation](output/final_evaluation/evaluation_summary.md): test protocol and result.
@@ -64,6 +66,7 @@ DS4002-project2/
 |       |-- albemarle_pm25_poc3_forward_filled.csv
 |       `-- albemarle_pm25_corrected_poc_forward_filled.csv
 `-- output/
+    |-- README.md                                # Script/output file guide
     |-- model_selection.md
     |-- reproducibility_check.md
     |-- split_summary.csv / training_lag_correlations.csv
