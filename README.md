@@ -31,8 +31,8 @@ DS4002-project2/
 |-- .gitignore
 |-- scripts/
 |   |-- preprocess_data.py                       # Step 1: all four datasets
-|   |-- preprocessing_without_interpolation.ipynb # Notebook wrapper for step 1
-|   |-- preprocessing_with_interpolation.ipynb    # Notebook wrapper; filename retained
+|   |-- preprocessing_without_interpolation.ipynb # Original detailed corrected-history notebook
+|   |-- preprocessing_with_interpolation.ipynb    # Original detailed forward-fill notebook
 |   |-- model_training.py                        # Step 2: 152 candidate comparisons
 |   |-- validation_models.py                     # Imported helper, not a standalone step
 |   |-- model_diagnostics.py                     # Step 3: selected model checks
@@ -111,7 +111,7 @@ All five raw ZIPs are included. No account, API key, scraping, or new download i
 .\.venv\Scripts\python.exe scripts/evaluation.py
 ```
 
-1. **Preprocessing** regenerates both original/corrected histories and both forward-filled alternatives, plus a source/checksum audit. It reads nationwide CSVs in chunks, preserving the genuine Event Type `None`. No manual code changes are required. The notebooks are optional wrappers for this same step, not additional steps. In VS Code select this environment's kernel if using a notebook.
+1. **Preprocessing** regenerates both original/corrected histories and both forward-filled alternatives, plus a source/checksum audit. It reads nationwide CSVs in chunks, preserving the genuine Event Type `None`. No manual code changes are required. The original detailed notebooks are preserved unchanged. They are separate implementations, not wrappers: the no-fill notebook exports the corrected history and uses the included original POC-3 file as a comparison; the forward-fill notebook requires both no-fill reference files. For complete from-raw reproduction of all four datasets without manual edits, use the command-line script above. The notebooks retain their original parsing of Event Type None as a null; the command-line script preserves the literal category. This metadata difference does not change pollution values. In VS Code select this environment's kernel if inspecting the notebooks.
 2. **Training/validation** uses 2021-2023 for fitting and 2024 for selection. It runs 32 nonseasonal candidates (p/q 0-3, d 0-1) and six exploratory weekly candidates for each of four datasets: **152 candidate fits**. The helper module is imported automatically. Fits can take several minutes; progress is printed and logged. Nonconverged fits are excluded and documented.
 3. **Diagnostics** checks the selected corrected/no-fill model, including warnings, error patterns, root magnitudes, and plots. Diagnostics do not trigger test-based retuning.
 4. **Refit** fixes ARIMA(2,1,3), no seasonal terms or drift, and fits 2021-2024. It saves parameters, filtered state, metadata, model/history checksums, and package versions. Missing observations remain blank. The script deliberately stops if the recorded model selection changes.

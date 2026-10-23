@@ -3,7 +3,8 @@
 Run first: python scripts/preprocess_data.py (from any working directory).
 Requires pandas and numpy. Preserves EPA's literal Event Type 'None'; missing
 calendar days remain blank. No model fitting, parameter selection, or scoring.
-The two notebooks call this same implementation to avoid divergent rules.
+The original detailed notebooks are preserved separately; this command-line
+entry point regenerates all four exports without manual notebook edits.
 """
 
 import hashlib
