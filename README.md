@@ -4,7 +4,7 @@ DS 4002 Project 2 | EAZ Inc. | Annie Nguyen (group leader), Zilan Saadi, Eli Boy
 
 We forecast the next day's average PM2.5 at EPA site **51-003-0001**, Albemarle High School, Virginia. The goal is **2025 test MAE at least 10% below** a baseline that predicts tomorrow equals today.
 
-**All three stages are implemented: preprocessing, training/validation, and final evaluation.** The frozen selected model is **corrected-history ARIMA(2,1,3), without filling**, refitted on 2021-2024. On **361 shared 2025 scoring dates**, model MAE is **2.024619 ug/m3**, baseline MAE **2.295626 ug/m3**, an **11.805358% reduction**. The goal is met on this retrospective test. This is a single-site result, not evidence of universal superiority or a live public-health forecast.
+**All three stages are implemented: preprocessing, training/validation, and final evaluation.** The frozen selected model is **corrected-history ARIMA(2,1,3), without filling**, refitted on 2021-2024. On **361 shared 2025 scoring dates**, model MAE is **2.024619 ug/m3**, baseline MAE **2.295626 ug/m3**, an **11.805358% reduction**. The goal is met on this retrospective test.
 
 ## Repository contents
 
